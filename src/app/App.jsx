@@ -1,4 +1,5 @@
 import { Redirect, Switch, Route } from 'react-router-dom';
+
 // Core
 import { AppBar, Box, Toolbar, Typography } from '@material-ui/core';
 import { ROUTES } from '../routes/routes';

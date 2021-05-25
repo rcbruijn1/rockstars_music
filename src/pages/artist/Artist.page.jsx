@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 
 // Core
 import { useHistory, useLocation } from "react-router-dom";
@@ -10,10 +11,9 @@ import { OVERVIEW_ARTISTS_PATH, OVERVIEW_TRACKS_PATH } from "../../routes/paths"
 import { Check, LibraryAdd } from "@material-ui/icons";
 
 const ArtistPage = ({ match }) => {
-  const { artistName } = match.params;
-
   const history = useHistory();
   const location = useLocation();
+  const { artistName } = match.params;
 
   const isActive = path => location.pathname.includes(path);
 
@@ -113,7 +113,10 @@ const ArtistPage = ({ match }) => {
               <ListItem key={track.id}>
                 <ListItemText primary={track.name} secondary={track.album} />
                 <ListItemSecondaryAction>
-                  <IconButton color="secondary" onClick={() => console.log('Add')}>
+                  <IconButton 
+                    color="secondary" 
+                    onClick={() => console.log('Add')}
+                  >
                     <LibraryAdd />
                   </IconButton>
                 </ListItemSecondaryAction>
@@ -124,6 +127,10 @@ const ArtistPage = ({ match }) => {
       </Main>
     </Box>
   );
+};
+
+ArtistPage.propTypes = {
+  match: PropTypes.object,
 };
 
 export default ArtistPage;

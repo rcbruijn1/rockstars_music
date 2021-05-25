@@ -22,9 +22,11 @@ const OverviewPage = () => {
     >
       <Box p={{ xs: 3, md: 6 }} width={{ xs: '100%', md: '30%' }}>
         <List disablePadding>
-          <Typography color="secondary" variant="h5" paragraph>
-            My Library
-          </Typography>
+          <ListItem>
+            <Typography color="secondary" variant="h5" paragraph>
+              My Library
+            </Typography>
+          </ListItem>
           <ListItem disableGutters>
             <Button 
               fullWidth 

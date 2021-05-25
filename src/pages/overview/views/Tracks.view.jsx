@@ -1,4 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
+import queryString from 'query-string';
 
 // Core
 import { 
@@ -16,17 +18,30 @@ import {
 import { ChevronLeft, ChevronRight, LibraryAdd } from "@material-ui/icons";
 
 const TracksView = () => {
+  const location = useLocation();
+  const history = useHistory();
+  const params = queryString.parse(location.search);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [tracks, setTracks] = useState([]);
-  const [page, setPage] = useState(1);
+
+  const currentPage = params && parseInt(params.page, 10) || 1;
+
+  const handleNewPage = async newPage => {
+    history.push({
+      search: queryString.stringify({
+        page: newPage,
+      }),
+    });
+  };
 
   useEffect(() => {
-    fetch(`http://localhost:4000/songs?_page=${page}&_limit=8`)
+    fetch(`http://localhost:4000/songs?_page=${currentPage}&_limit=8`)
       .then(res => res.json())
       .then(
         (result) => {
-          if (result.length === 0) setPage(1);
+          if (result.length === 0) handleNewPage(1);
           setLoading(false);
           setTracks(result);
         },
@@ -35,32 +50,34 @@ const TracksView = () => {
           setError(error);
         }
       )
-  }, [page]);
+  }, [currentPage]);
 
   return (
     <Fragment>
       <ListItem divider>
-        <Box display="flex" justifyContent="space-between" width="100%" alignItems="center">
+        <Box display="flex" justifyContent="space-between" width="100%">
           <Typography color="secondary" variant="h5">
             Tracks
           </Typography>
 
           <Box display="flex" alignItems="center">
             <IconButton
-              disabled={page === 1} 
-              color="secondary" 
-              onClick={() => setPage(page - 1)}
+              disabled={currentPage === 1} 
+              color="secondary"
+              size="small"
+              onClick={() => handleNewPage(currentPage - 1)}
             >
               <ChevronLeft />
             </IconButton>
 
-            <Typography color="secondary">
-              {`Page ${page}`}
+            <Typography color="secondary" variant="body2">
+              {`Page ${currentPage}`}
             </Typography>
 
             <IconButton 
-              color="secondary" 
-              onClick={() => setPage(page + 1)}
+              color="secondary"
+              size="small"
+              onClick={() => handleNewPage(currentPage + 1)}
             >
               <ChevronRight />
             </IconButton>
@@ -69,9 +86,9 @@ const TracksView = () => {
       </ListItem>
 
       {loading && (
-      <Box py={10} display="flex" justifyContent="center" alignItems="center">
-        <CircularProgress color="secondary" />
-      </Box>
+        <Box py={10} display="flex" justifyContent="center" alignItems="center">
+          <CircularProgress color="secondary" />
+        </Box>
       )}
 
       {error && (
